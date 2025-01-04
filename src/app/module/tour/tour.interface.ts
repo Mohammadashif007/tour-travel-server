@@ -11,6 +11,7 @@ export type TTour = {
   startLocation: string;
   locations: string[];
   slug: string;
+  availableSeats: number;
 };
 
 export interface ITourMethods {

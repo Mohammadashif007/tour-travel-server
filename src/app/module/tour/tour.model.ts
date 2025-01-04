@@ -12,6 +12,7 @@ const tourSchema = new Schema<TTour, TTourModel, ITourMethods>({
   startLocation: { type: String },
   locations: [String],
   slug: String,
+  availableSeats: { type: Number, required: true },
 });
 
 // ! instance method

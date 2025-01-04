@@ -1,96 +1,63 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { Request, Response } from 'express';
 import { UserServices } from './user.service';
+import sendResponse from '../../utils/sendResponse';
+import { StatusCodes } from 'http-status-codes';
+import { catchAsync } from '../../utils/catchAsync';
 
-const createUser = async (req: Request, res: Response) => {
-  try {
-    const payload = req.body;
-    const result = await UserServices.createUserIntoDB(payload);
-    res.status(201).json({
-      success: true,
-      message: 'User created successfully',
-      data: result,
-    });
-  } catch (error: any) {
-    res.status(500).json({
-      success: false,
-      message: error.message || 'Something went wrong',
-      error: error,
-    });
-  }
-};
+const createUser = catchAsync(async (req, res) => {
+  const payload = req.body;
+  const result = await UserServices.createUserIntoDB(payload);
+  sendResponse(res, {
+    statusCode: StatusCodes.CREATED,
+    success: true,
+    message: 'Create user successfully',
+    data: result,
+  });
+});
 
-const getAllUser = async (req: Request, res: Response) => {
-  try {
-    const result = await UserServices.getAllUserFromDB();
-    res.status(200).json({
-      success: true,
-      message: 'All users retrieve successfully',
-      data: result,
-    });
-  } catch (error: any) {
-    res.status(500).json({
-      success: false,
-      message: error.message || 'Something went wrong',
-      error: error,
-    });
-  }
-};
+const getAllUser = catchAsync(async (req, res) => {
+  const result = await UserServices.getAllUserFromDB();
+  sendResponse(res, {
+    statusCode: StatusCodes.OK,
+    success: true,
+    message: 'All user retrieve successfully',
+    data: result,
+  });
+});
 
-const getSingleUser = async (req: Request, res: Response) => {
-  try {
-    const { userId } = req.params;
-    const result = await UserServices.getSingleUserFromDB(userId);
-    res.status(200).json({
-      success: true,
-      message: 'Single user retrieve successfully',
-      data: result,
-    });
-  } catch (error: any) {
-    res.status(500).json({
-      success: false,
-      message: error.message || 'Something went wrong',
-      error: error,
-    });
-  }
-};
+const getSingleUser = catchAsync(async (req, res) => {
+  const { userId } = req.params;
+  const result = await UserServices.getSingleUserFromDB(userId);
+  sendResponse(res, {
+    statusCode: StatusCodes.OK,
+    success: true,
+    message: 'get single user retrieve successfully',
+    data: result,
+  });
+});
 
-const updateUser = async (req: Request, res: Response) => {
-  try {
-    const payload = req.body;
-    const { userId } = req.params;
-    const result = await UserServices.updateUserIntoDB(userId, payload);
-    res.status(200).json({
-      success: true,
-      message: 'User updated successfully',
-      data: result,
-    });
-  } catch (error: any) {
-    res.status(500).json({
-      success: false,
-      message: error.message || 'Something went wrong',
-      error: error,
-    });
-  }
-};
+const updateUser = catchAsync(async (req, res) => {
+  const payload = req.body;
+  const { userId } = req.params;
+  const result = await UserServices.updateUserIntoDB(userId, payload);
+  sendResponse(res, {
+    statusCode: StatusCodes.OK,
+    success: true,
+    message: 'user updated successfully',
+    data: result,
+  });
+});
 
-const deleteUser = async (req: Request, res: Response) => {
-  try {
-    const { userId } = req.params;
-    await UserServices.deleteUserFromDB(userId);
-    res.status(200).json({
-      success: true,
-      message: 'User deleted successfully',
-      data: {},
-    });
-  } catch (error: any) {
-    res.status(500).json({
-      success: false,
-      message: error.message || 'Something went wrong',
-      error: error,
-    });
-  }
-};
+const deleteUser = catchAsync(async (req, res) => {
+  const { userId } = req.params;
+  await UserServices.deleteUserFromDB(userId);
+  sendResponse(res, {
+    statusCode: StatusCodes.OK,
+    success: true,
+    message: 'User deleted successfully',
+    data: {},
+  });
+});
 
 export const UserControllers = {
   createUser,
